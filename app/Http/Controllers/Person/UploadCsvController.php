@@ -108,11 +108,22 @@ class UploadCsvController extends Controller
         $person = explode(' ', $person);
         // Remove any empty string
         $person = array_values(array_filter($person));
+        $count = count($person);
+        // Set first name & last name
+        $firstName = null;
+        $lastName = null;
+        if ($count == 2) {
+            $firstName = ucfirst($person[0]);
+            $lastName = ucfirst($person[1]);
+        } else {
+            $lastName = ucfirst($person[0]);
+        }
+
         foreach ($totalTitle as $title) {
             $totalPerson[] = [
                 'title' => ucfirst($title), // make first letter uppercase
-                'first_name' => isset($person[0]) ? ucfirst($person[0]) : null,
-                'last_name' => isset($person[1]) ? ucfirst($person[1]) : null,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
                 'initial' => null
             ];
         }
@@ -128,6 +139,7 @@ class UploadCsvController extends Controller
     {
         $patterns[0] = '/and/';
         $patterns[1] = '/&/';
+        $patterns[2] = '/\./';
         $string = preg_replace($patterns, '', $string);
         return $string;
     }
