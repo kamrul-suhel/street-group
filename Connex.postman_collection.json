@@ -1,0 +1,598 @@
+{
+	"info": {
+		"_postman_id": "009976f5-07be-4c6a-97e1-f5c7726e5f47",
+		"name": "Connex",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Service A with Must receive ALL payloads",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Michael Collier\"",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "07707000000",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bigmike@collier.com",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "1234",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "SALE MADE",
+							"type": "text"
+						},
+						{
+							"key": "serviceType",
+							"value": "serviceA",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "query_type[title]",
+							"value": "Sale Made",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[id]",
+							"value": "5678",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[length]",
+							"value": "01:56:34",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[recording_url]",
+							"value": "http://remote.system/recording/5678",
+							"type": "text"
+						},
+						{
+							"key": "campaign[id]",
+							"value": "1011",
+							"type": "text"
+						},
+						{
+							"key": "campaign[name]",
+							"value": "Campaign A",
+							"type": "text"
+						},
+						{
+							"key": "campaign[description]",
+							"value": "A lovely campaign for Michae",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/v1/services",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Service A with Must not receive payloads about Campaign B for security reasons",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Michael Collier\"",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "07707000000",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bigmike@collier.com",
+							"type": "text"
+						},
+						{
+							"key": "serviceType",
+							"value": "serviceA",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "query_type[title]",
+							"value": "Sale Made",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[id]",
+							"value": "5678",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[length]",
+							"value": "01:56:34",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[recording_url]",
+							"value": "http://remote.system/recording/5678",
+							"type": "text"
+						},
+						{
+							"key": "campaign[id]",
+							"value": "1516",
+							"type": "text"
+						},
+						{
+							"key": "campaign[name]",
+							"value": "Campaign B",
+							"type": "text"
+						},
+						{
+							"key": "campaign[description]",
+							"value": "A lovely campaign for Michae",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/v1/services",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Service C - Must receive ALL payloads",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Michael Collier\"",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "07707000000",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "bigmike@collier.com",
+							"type": "text"
+						},
+						{
+							"key": "serviceType",
+							"value": "serviceC",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "query_type[title]",
+							"value": "Sale Made",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[id]",
+							"value": "5678",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[length]",
+							"value": "01:56:34",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[recording_url]",
+							"value": "http://remote.system/recording/5678",
+							"type": "text"
+						},
+						{
+							"key": "campaign[id]",
+							"value": "1516",
+							"type": "text"
+						},
+						{
+							"key": "campaign[name]",
+							"value": "Campaign A",
+							"type": "text"
+						},
+						{
+							"key": "campaign[description]",
+							"value": "A lovely campaign for Michae",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/v1/services",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Service B - Must receive payloads about sales only",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Michael Collier\"",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "07707000000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "bigmike@collier.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "serviceType",
+							"value": "serviceB",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "query_type[title]",
+							"value": "Sale Made",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[id]",
+							"value": "5678",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "call_stats[length]",
+							"value": "01:56:34",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "call_stats[recording_url]",
+							"value": "http://remote.system/recording/5678",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[id]",
+							"value": "1011",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[name]",
+							"value": "Campaign A",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[description]",
+							"value": "A lovely campaign for Michae",
+							"type": "text",
+							"disabled": true
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/v1/services",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Rule Dynamically",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "API-TOKEN",
+						"value": "8c4955934af8524c934904d699d1c344",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Michael Collier\"",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phone",
+							"value": "07707000000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "bigmike@collier.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "serviceType",
+							"value": "serviceB",
+							"type": "text"
+						},
+						{
+							"key": "query_type[id]",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "query_type[title]",
+							"value": "Sale Made",
+							"type": "text"
+						},
+						{
+							"key": "call_stats[id]",
+							"value": "5678",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "call_stats[length]",
+							"value": "01:56:34",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "call_stats[recording_url]",
+							"value": "http://remote.system/recording/5678",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[id]",
+							"value": "1011",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[name]",
+							"value": "Campaign A",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "campaign[description]",
+							"value": "A lovely campaign for Michae",
+							"type": "text",
+							"disabled": true
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/v1/services",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"services"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
