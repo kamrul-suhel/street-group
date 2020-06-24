@@ -9,11 +9,9 @@ import Persons from "./Persons";
 function UploadCSV() {
 
     const [persons, setPersons] = useState([])
-    const [invalidPersons, setInvalidPersons] = useState([])
 
     const handleUpdatePersons = (data) => {
         setPersons(pervState => [...data.persons])
-        setInvalidPersons(prevState => [...data.invalid])
     }
 
     return (
@@ -28,18 +26,6 @@ function UploadCSV() {
 
                     <Grid item xs={12}>
                         <Persons persons={persons}/>
-                    </Grid>
-                </Grid>
-            </Container>}
-
-            {persons.length > 0 && <Container>
-                <Grid container style={{marginTop: 20}}>
-                    <Grid item xs={12}>
-                        <Typography variant="h5">Invalid person</Typography>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Persons persons={invalidPersons}/>
                     </Grid>
                 </Grid>
             </Container>}

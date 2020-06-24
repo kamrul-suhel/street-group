@@ -23,19 +23,13 @@ class UploadCsvController extends Controller
         $persons = $this->getAllPerson($csvToArray);
         // Make collection for valid person
         $validPersons = collect($persons['persons']);
-        $validPersons = $validPersons->flatten(1)->all();
-
-        // Make collection for invalid person
-        $invalidPersons = collect($persons['invalid']);
-        $invalidPersons = $invalidPersons->flatten(1);
-        $invalidPersons = $invalidPersons->filter(function ($value, $key) {
+        $validPersons = $validPersons->flatten(1)->filter(function($value){
             return $value['first_name'] != null || $value['last_name'] != null;
         })->values();
 
         return $this->successResponse(
             [
-                'persons' => $validPersons,
-                'invalid' => $invalidPersons
+                'persons' => $validPersons
             ]
         );
     }
@@ -84,8 +78,6 @@ class UploadCsvController extends Controller
             foreach ($modifyPersons as $key => $value) {
                 if ($key == 'person') {
                     $data['persons'][] = $value;
-                } else {
-                    $data['invalid'][] = $value;
                 }
             }
         }
@@ -104,20 +96,20 @@ class UploadCsvController extends Controller
         $titles = Person::TITLE;
         $totalTitle = [];
         $totalPerson = [];
-        $totalInvalidPerson = [];
 
         foreach ($titles as $title) {
             // Convert title into lowercase
             $title = strtolower($title);
 
-//            $pattern = ;// regular expression to exact match:  (?:^|\W)mrs(?:$|\W)
-            preg_match('/(?:^|\W)' . $title . '(?:$|\W)/', $person, $matches); // expensive we can use strpos($person, $title) !== false
+//          Regular expression to exact match:  (?:^|\W)mrs(?:$|\W)
+            $pattern = '/(?:^|\W)' . $title . '(?:$|\W)/';
+            preg_match($pattern, $person, $matches); // expensive we can use strpos($person, $title) !== false
 
             // Check is current title is exists in person
             if (count($matches) > 0) {
                 $totalTitle[] = $title;
                 // remove title from string
-                $person = preg_replace('/(?:^|\W)' . $title . '(?:$|\W)/', ' ', $person);
+                $person = preg_replace($pattern, ' ', $person);
             }
         }
 
@@ -127,27 +119,17 @@ class UploadCsvController extends Controller
         // make array remaining string
         foreach ($totalTitle as $title) {
             foreach ($names as $key => $value) {
-                if ($value['valid']) {
-                    $totalPerson[] = [
-                        'title' => $title,
-                        'first_name' => $value['first_name'],
-                        'last_name' => $value['last_name'],
-                        'initial' => null
-                    ];
-                } else {
-                    $totalInvalidPerson[] = [
-                        'title' => $title,
-                        'first_name' => $value['first_name'],
-                        'last_name' => $value['last_name'],
-                        'initial' => null
-                    ];
-                }
+                $totalPerson[] = [
+                    'title' => $title,
+                    'first_name' => $value['first_name'],
+                    'last_name' => $value['last_name'],
+                    'initial' => null
+                ];
             }
         }
 
         return [
-            'person' => $totalPerson,
-            'invalid' => $totalInvalidPerson
+            'person' => $totalPerson
         ];
     }
 
@@ -199,11 +181,9 @@ class UploadCsvController extends Controller
         // Set first name & last name
         $firstName = null;
         $lastName = null;
-        $valid = null;
         if ($count >= 2) {
             $firstName = ucfirst($persons[0]);
             $lastName = ucfirst($persons[1]);
-            $valid = true;
         } else {
             $lastName = isset($persons[0]) ? ucfirst($persons[0]) : null;
             $valid = false;
@@ -211,8 +191,7 @@ class UploadCsvController extends Controller
 
         return [
             'first_name' => $firstName,
-            'last_name' => $lastName,
-            'valid' => $valid
+            'last_name' => $lastName
         ];
     }
 
