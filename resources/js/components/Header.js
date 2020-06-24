@@ -36,8 +36,7 @@ const Header = (props) => {
         const response = await axios.post('/api/v1/uploadcsv', uploadForm)
 
         if(response.data.success){
-            console.log('respon is:', response.data)
-            updatePersons(response.data.persons)
+            updatePersons(response.data)
         }else{
             // error
         }

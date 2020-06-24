@@ -14,6 +14,7 @@
     </head>
     <body>
         <div id="streetGroup">
+
         </div>
 
     <script src="{{asset('/js/app.js')}}"></script>

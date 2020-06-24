@@ -21,13 +21,23 @@ class UploadCsvController extends Controller
         $file = $request->file('file');
         $csvToArray = $this->parseCsv($file);
         $persons = $this->getAllPerson($csvToArray);
+        // Make collection for valid person
+        $validPersons = collect($persons['persons']);
+        $validPersons = $validPersons->flatten(1)->all();
 
-        // Make collection
-        $persons = collect($persons);
-        $flatten = $persons->flatten(1);
-        $persons = $flatten->all();
+        // Make collection for invalid person
+        $invalidPersons = collect($persons['invalid']);
+        $invalidPersons = $invalidPersons->flatten(1);
+        $invalidPersons = $invalidPersons->filter(function ($value, $key) {
+            return $value['first_name'] != null || $value['last_name'] != null;
+        })->values();
 
-        return $this->successResponse(['persons' => $persons]);
+        return $this->successResponse(
+            [
+                'persons' => $validPersons,
+                'invalid' => $invalidPersons
+            ]
+        );
     }
 
 
@@ -70,9 +80,15 @@ class UploadCsvController extends Controller
     {
         $data = [];
         foreach ($persons as $person) {
-            $data[] = $this->getPerson($person);
+            $modifyPersons = $this->getPerson($person);
+            foreach ($modifyPersons as $key => $value) {
+                if ($key == 'person') {
+                    $data['persons'][] = $value;
+                } else {
+                    $data['invalid'][] = $value;
+                }
+            }
         }
-
         return $data;
     }
 
@@ -88,47 +104,51 @@ class UploadCsvController extends Controller
         $titles = Person::TITLE;
         $totalTitle = [];
         $totalPerson = [];
+        $totalInvalidPerson = [];
 
         foreach ($titles as $title) {
             // Convert title into lowercase
             $title = strtolower($title);
 
+//            $pattern = ;// regular expression to exact match:  (?:^|\W)mrs(?:$|\W)
+            preg_match('/(?:^|\W)' . $title . '(?:$|\W)/', $person, $matches); // expensive we can use strpos($person, $title) !== false
+
             // Check is current title is exists in person
-            if (strpos($person, $title) !== false) {
+            if (count($matches) > 0) {
                 $totalTitle[] = $title;
                 // remove title from string
-                $person = preg_replace('/' . $title . '/', '', $person);
+                $person = preg_replace('/(?:^|\W)' . $title . '(?:$|\W)/', ' ', $person);
             }
         }
 
         // Replace special character &, and
-        $person = $this->cleanString($person);
+        $names = $this->getName($person);
 
         // make array remaining string
-        $person = explode(' ', $person);
-        // Remove any empty string
-        $person = array_values(array_filter($person));
-        $count = count($person);
-        // Set first name & last name
-        $firstName = null;
-        $lastName = null;
-        if ($count == 2) {
-            $firstName = ucfirst($person[0]);
-            $lastName = ucfirst($person[1]);
-        } else {
-            $lastName = ucfirst($person[0]);
-        }
-
         foreach ($totalTitle as $title) {
-            $totalPerson[] = [
-                'title' => ucfirst($title), // make first letter uppercase
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'initial' => null
-            ];
+            foreach ($names as $key => $value) {
+                if ($value['valid']) {
+                    $totalPerson[] = [
+                        'title' => $title,
+                        'first_name' => $value['first_name'],
+                        'last_name' => $value['last_name'],
+                        'initial' => null
+                    ];
+                } else {
+                    $totalInvalidPerson[] = [
+                        'title' => $title,
+                        'first_name' => $value['first_name'],
+                        'last_name' => $value['last_name'],
+                        'initial' => null
+                    ];
+                }
+            }
         }
 
-        return $totalPerson;
+        return [
+            'person' => $totalPerson,
+            'invalid' => $totalInvalidPerson
+        ];
     }
 
     /**
@@ -137,11 +157,63 @@ class UploadCsvController extends Controller
      */
     private function cleanString($string)
     {
-        $patterns[0] = '/and/';
         $patterns[1] = '/&/';
         $patterns[2] = '/\./';
         $string = preg_replace($patterns, '', $string);
         return $string;
+    }
+
+
+    private function getName($personString)
+    {
+        // check string has and, if yes then multiple
+
+        $pattern = '/(?:^|\W)and(?:$|\W)/';
+        preg_match($pattern, $personString, $matches);
+        $totalPerson = [];
+
+        if (count($matches) > 0) {
+            // multiple person with and
+            $personString = preg_replace($pattern, '_% ', $personString);
+            $persons = explode('_%', $personString);
+            foreach ($persons as $person) {
+                $totalPerson[] = $this->getPersonArray($person);
+            }
+
+        } else {
+            // Single person
+            $totalPerson[] = $this->getPersonArray($personString);
+        }
+
+        return $totalPerson;
+    }
+
+    private function getPersonArray($personString)
+    {
+        // Clear any special character
+        $personString = $this->cleanString($personString);
+        $persons = explode(' ', $personString);
+        // Remove any empty string
+        $persons = array_values(array_filter($persons));
+        $count = count($persons);
+        // Set first name & last name
+        $firstName = null;
+        $lastName = null;
+        $valid = null;
+        if ($count >= 2) {
+            $firstName = ucfirst($persons[0]);
+            $lastName = ucfirst($persons[1]);
+            $valid = true;
+        } else {
+            $lastName = isset($persons[0]) ? ucfirst($persons[0]) : null;
+            $valid = false;
+        }
+
+        return [
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'valid' => $valid
+        ];
     }
 
 }

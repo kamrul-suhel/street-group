@@ -91909,8 +91909,7 @@ var Header = function Header(props) {
               response = _context.sent;
 
               if (response.data.success) {
-                console.log('respon is:', response.data);
-                updatePersons(response.data.persons);
+                updatePersons(response.data);
               } else {// error
               }
 
@@ -92248,9 +92247,17 @@ function UploadCSV() {
       persons = _useState2[0],
       setPersons = _useState2[1];
 
-  var handleUpdatePersons = function handleUpdatePersons(persons) {
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      invalidPersons = _useState4[0],
+      setInvalidPersons = _useState4[1];
+
+  var handleUpdatePersons = function handleUpdatePersons(data) {
     setPersons(function (pervState) {
-      return _toConsumableArray(persons);
+      return _toConsumableArray(data.persons);
+    });
+    setInvalidPersons(function (prevState) {
+      return _toConsumableArray(data.invalid);
     });
   };
 
@@ -92273,6 +92280,21 @@ function UploadCSV() {
     xs: 12
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Persons__WEBPACK_IMPORTED_MODULE_6__["default"], {
     persons: persons
+  })))), persons.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Container__WEBPACK_IMPORTED_MODULE_4__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    container: true,
+    style: {
+      marginTop: 20
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    item: true,
+    xs: 12
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    variant: "h5"
+  }, "Invalid person")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    item: true,
+    xs: 12
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Persons__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    persons: invalidPersons
   })))));
 }
 
@@ -92302,8 +92324,8 @@ if (document.getElementById('streetGroup')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/kamrulahmed/Sites/Street-group/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/kamrulahmed/Sites/Street-group/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\street-group\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\street-group\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
